@@ -17,6 +17,12 @@ class UserViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
+
+    def create(self, request, *args, **kwargs):
+        return Response(
+            {"detail": "Use 'Register' endpoint to create a new user."},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
     
     @action(detail=False, methods=['POST'], permission_classes=[AllowAny])
     def register(self, request):
