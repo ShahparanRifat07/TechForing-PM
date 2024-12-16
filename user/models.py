@@ -17,7 +17,7 @@ class TimeStampedModel(models.Model):
 
 
 class User(AbstractUser):
-    email = models.EmailField(unique=True, blank= False,editable=False)
+    email = models.EmailField(unique=True, blank= False, null=False)
     date_joined = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = "email"
