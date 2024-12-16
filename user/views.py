@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from drf_yasg.utils import swagger_auto_schema
 
 from .models import User
 from .serializers import (
@@ -11,11 +12,12 @@ from .serializers import (
     UserRegistrationSerializer, 
     UserLoginSerializer
 )
+from .permissions import IsUserOwner
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsUserOwner]
     serializer_class = UserSerializer
 
     def create(self, request, *args, **kwargs):
@@ -24,6 +26,9 @@ class UserViewSet(viewsets.ModelViewSet):
             status=status.HTTP_405_METHOD_NOT_ALLOWED
         )
     
+    @swagger_auto_schema(
+        request_body=UserRegistrationSerializer,
+    )
     @action(detail=False, methods=['POST'], permission_classes=[AllowAny])
     def register(self, request):
         try:
@@ -40,6 +45,9 @@ class UserViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(
+        request_body=UserLoginSerializer,
+    )
     @action(detail=False, methods=['POST'], permission_classes=[AllowAny])
     def login(self, request):
         try:
