@@ -22,6 +22,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsProjectOwnerOrAdmin]
 
     def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Project.objects.none()
         return Project.objects.filter(members__user=self.request.user)
 
     @swagger_auto_schema(
