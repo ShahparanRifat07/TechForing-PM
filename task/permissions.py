@@ -14,6 +14,14 @@ class IsProjectMember(permissions.BasePermission):
             try:
                 project_id = Task.objects.get(pk=task_id).project_id
             except Task.DoesNotExist:
-                return False 
-        return Project.objects.filter(id=project_id, members__user=request.user).exists()
+                return False
+        return Project.objects.filter(
+            id=project_id, members__user=request.user
+        ).exists()
 
+
+class IsCommentOwner(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return obj.user == request.user
