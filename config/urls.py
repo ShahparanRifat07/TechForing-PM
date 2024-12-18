@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import (
@@ -28,7 +29,7 @@ from rest_framework import permissions
 schema_view = get_schema_view(
     openapi.Info(
         title="TechForing PM API",
-        default_version='v1',
+        default_version="v1",
         description="API documentation for TechForing Project Management System",
     ),
     public=True,
@@ -37,14 +38,15 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    
-    path('api/', include('user.urls')),
-    path('api/', include('project.urls')),
-    path('api/', include('task.urls')),
-
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
-    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path("admin/", admin.site.urls),
+    path("api/", include("user.urls")),
+    path("api/", include("project.urls")),
+    path("api/", include("task.urls")),
+    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path(
+        "docs/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
 ]

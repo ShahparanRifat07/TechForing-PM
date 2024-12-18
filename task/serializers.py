@@ -99,9 +99,9 @@ class CommentSerializer(serializers.ModelSerializer):
             rep["task"] = {
                 "id": instance.task.project.id,
                 "title": instance.task.project.name,
-                'assigned_to': {
-                    'id': instance.task.assigned_to.id,
-                    'username': instance.task.assigned_to.username,
+                "assigned_to": {
+                    "id": instance.task.assigned_to.id,
+                    "username": instance.task.assigned_to.username,
                 },
             }
         return rep
@@ -115,16 +115,18 @@ class CommentCreateSerializer(serializers.ModelSerializer):
         fields = ["content", "task"]
 
     def validate(self, data):
-        task = self.context.get('task')
-        comment = self.context.get('comment')
-        user = self.context['request'].user
+        task = self.context.get("task")
+        comment = self.context.get("comment")
+        user = self.context["request"].user
         if task:
             if not task.project.members.filter(user=user).exists():
-                raise serializers.ValidationError("You are not a member of this project.")
+                raise serializers.ValidationError(
+                    "You are not a member of this project."
+                )
         if not task and not comment:
             raise serializers.ValidationError("Task or Comment does not exist.")
         return data
-    
+
     def create(self, validated_data):
         validated_data["task"] = self.context["task"]
         validated_data["user"] = self.context["request"].user
